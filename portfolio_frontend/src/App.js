@@ -207,6 +207,8 @@ function App() {
   return (
     <>
       <SEOHead />
+      {/* --- Portfolio Abstract Background Motif Overlay --- */}
+      <PortfolioBackgroundVisuals />
       <div className="portfolio-sidebar-shadow"></div>
       <div className="portfolio-sidebar-shadow right"></div>
       <div className="portfolio-layout">
@@ -442,6 +444,146 @@ function SEOHead() {
     };
   }, []);
   return null;
+}
+
+/**
+ * PUBLIC_INTERFACE
+ * PortfolioBackgroundVisuals - a fixed, non-intrusive layer of SVG/HTML geometric shapes
+ * and abstract motifs for lively, modern portfolio backgrounds.
+ * Motifs: circles, dots, lines, triangles, grids - lightweight, uncluttered, flat-design.
+ * - Layer is fixed/fills the viewport, below the content (z-index: 0)
+ * - Responsive and non-distracting
+ */
+function PortfolioBackgroundVisuals() {
+  return (
+    <div
+      className="portfolio-background-visual"
+      aria-hidden="true"
+      style={{
+        position: "fixed",
+        zIndex: 0,
+        inset: 0,
+        width: "100vw",
+        height: "100vh",
+        pointerEvents: "none",
+        overflow: "hidden",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}
+    >
+      {/* Abstract big yellow circle - top left */}
+      <svg
+        width="260"
+        height="260"
+        viewBox="0 0 260 260"
+        style={{
+          position: "absolute",
+          top: "-70px",
+          left: "-90px",
+          opacity: 0.17,
+        }}
+      >
+        <circle cx="130" cy="130" r="110" fill="#FFD800" />
+      </svg>
+      {/* Dots grid - bottom left */}
+      <svg
+        width="80"
+        height="70"
+        viewBox="0 0 80 70"
+        style={{
+          position: "absolute",
+          left: "24px",
+          bottom: "40px",
+          opacity: 0.14,
+          zIndex: 0,
+        }}
+      >
+        {[...Array(4)].map((_, row) =>
+          [...Array(6)].map((_, col) => (
+            <circle
+              key={`dot${row}${col}`}
+              cx={12 + col * 13}
+              cy={11 + row * 15}
+              r="2.5"
+              fill="#18181B"
+            />
+          ))
+        )}
+      </svg>
+      {/* Small black dot (bottom right) */}
+      <svg
+        width="22"
+        height="22"
+        style={{
+          position: "absolute",
+          right: "19vw",
+          bottom: "34px",
+          opacity: 0.23,
+        }}
+      >
+        <circle cx="11" cy="11" r="7" fill="#222" />
+      </svg>
+      {/* Angled yellow bar (top right, rotated rectangle) */}
+      <svg
+        width="120"
+        height="33"
+        style={{
+          position: "absolute",
+          right: "-39px",
+          top: "55px",
+          opacity: 0.13,
+          transform: "rotate(-16deg)",
+        }}
+      >
+        <rect x="0" y="0" width="120" height="17" fill="#FFD800" rx="8" />
+      </svg>
+      {/* Faint triangle (lower left) */}
+      <svg
+        width="73"
+        height="62"
+        style={{
+          position: "absolute",
+          left: "13vw",
+          bottom: "19vh",
+          opacity: 0.11,
+        }}
+      >
+        <polygon points="0,62 36,0 73,62" fill="#FFD800" />
+      </svg>
+      {/* Abstract semi-transparent lines (right) */}
+      <svg
+        width="100"
+        height="92"
+        style={{
+          position: "absolute",
+          right: "4vw",
+          top: "61vh",
+          opacity: 0.10,
+        }}
+      >
+        <rect x="7" y="11" width="88" height="7" rx="3.5" fill="#222" />
+        <rect x="11" y="38" width="78" height="5" rx="3" fill="#FFD800" />
+        <rect x="0" y="69" width="93" height="4" rx="2" fill="#222" />
+      </svg>
+      {/* Decorative dot (top center) */}
+      <svg
+        width="18"
+        height="18"
+        style={{
+          position: "absolute",
+          left: "51%",
+          top: "19px",
+          marginLeft: "-9px",
+          opacity: 0.19,
+        }}
+      >
+        <circle cx="9" cy="9" r="5" fill="#FFD800" />
+      </svg>
+      {/* More abstract motifs can be added as needed */}
+    </div>
+  );
 }
 
 export default App;
