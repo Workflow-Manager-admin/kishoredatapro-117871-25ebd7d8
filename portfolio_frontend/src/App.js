@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 
-// SVG icons from https://tabler-icons.io/ for open source usage
+// SVG icons (inline for palette control)
 const ICONS = {
   github: (
-    <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"  
-      strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"  aria-hidden="true">
+    <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2"
+      strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 2C6.48 2 2 6.484 2 12a9.96 9.96 0 006.838 9.486c.5.09.682-.217.682-.483 0-.237-.01-1.022-.014-1.853-2.782.604-3.37-1.341-3.37-1.341-.454-1.151-1.11-1.459-1.11-1.459-.908-.621.069-.609.069-.609 1.004.07 1.533 1.031 1.533 1.031.892 1.528 2.341 1.088 2.91.833.09-.646.349-1.09.634-1.34-2.222-.253-4.555-1.112-4.555-4.951 0-1.093.39-1.988 1.029-2.687-.103-.253-.447-1.272.098-2.652 0 0 .84-.27 2.75 1.026A9.58 9.58 0 0112 6.844c.853.004 1.713.116 2.517.34 1.91-1.296 2.749-1.026 2.749-1.026.546 1.38.202 2.399.1 2.652.64.699 1.028 1.594 1.028 2.687 0 3.848-2.334 4.695-4.558 4.944.359.31.679.92.679 1.855 0 1.338-.012 2.42-.012 2.749 0 .268.18.577.688.48A10.004 10.004 0 0022 12c0-5.516-4.484-10-10-10z"></path>
     </svg>
   ),
   linkedin: (
-    <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"  
+    <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" 
       strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6zm-8 12H4V9h4v11zm-2-13a2 2 0 110-4 2 2 0 010 4z"></path>
     </svg>
   ),
   mail: (
-    <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"
+    <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2"
       strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
       <rect x="3" y="5" width="18" height="14" rx="2" />
       <polyline points="3 7 12 13 21 7" />
     </svg>
   ),
   external: (
-    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2"
+    <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"
       strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
       <polyline points="15 3 21 3 21 9"/>
@@ -31,10 +31,21 @@ const ICONS = {
     </svg>
   ),
   arrow: (
-    <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"
+    <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"
       strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
       <polyline points="9 18 15 12 9 6" />
     </svg>
+  ),
+  exp: (
+    <svg width="30" height="30" fill="none" stroke="#524EE7" strokeWidth="2"
+      strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 2v4"/>
+      <path d="M8 2v4"/>
+      <path d="M3 10h18"/>
+    </svg>
+  ),
+  projects: (
+    <svg width="30" height="30" fill="none" stroke="#FDBA34" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
   ),
 };
 
@@ -47,7 +58,7 @@ const PROFILE = {
   linkedin: "https://linkedin.com/in/kishore-n-in",
   github: "https://github.com/kishore-n",
   resume: "https://github.com/kishore-n/resume/raw/main/KishoreN_Resume.pdf",
-  profilePic: "https://avatars.githubusercontent.com/u/70637510", // Public GitHub photo (as placeholder)
+  profilePic: "https://avatars.githubusercontent.com/u/70637510",
 };
 
 const ABOUT = {
@@ -106,6 +117,12 @@ const SERVICES = [
   },
 ];
 
+// For sidebar: stats widgets (example stats)
+const STATS = [
+  { value: 5, label: "Projects", icon: ICONS.projects, color: "var(--primary-blue)" },
+  { value: "1+", label: "Years Exp.", icon: ICONS.exp, color: "var(--accent-yellow)" },
+];
+
 const PROJECTS = [
   {
     name: "Retail Analytics Dashboard",
@@ -147,22 +164,20 @@ const PROJECTS = [
 
 // PUBLIC_INTERFACE
 function App() {
-  // Theme
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("light"); // not visible in Dribbble but keep toggle for spec
   useEffect(() => {
     const saved = window.localStorage.getItem("theme");
     setTheme(saved ? saved : "light");
   }, []);
-
   useEffect(() => {
+    // Just sets data-theme (support for future extensibility)
     document.documentElement.setAttribute("data-theme", theme);
     window.localStorage.setItem("theme", theme);
   }, [theme]);
 
-  // For Project Expand/Collapse
   const [openProject, setOpenProject] = useState(null);
 
-  // Animations: On scroll, fade-in section
+  // Fade-in animation for sections
   useEffect(() => {
     const handler = () => {
       document
@@ -180,15 +195,11 @@ function App() {
   }, []);
 
   // PUBLIC_INTERFACE
-  const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"));
-
-  // PUBLIC_INTERFACE
   const handleProjectToggle = (idx) => setOpenProject(idx === openProject ? null : idx);
 
   // PUBLIC_INTERFACE
   const handleContactSubmit = (e) => {
     e.preventDefault();
-    // Ideally hook to backend or email service. For now: Message shows success.
     alert("Thank you for reaching out! I'll get back to you soon.");
     e.target.reset();
   };
@@ -196,191 +207,165 @@ function App() {
   return (
     <>
       <SEOHead />
-      <nav className="navbar" aria-label="Main navigation">
-        <a className="nav-logo" href="#home" aria-label="Kishore N home">
-          <img src={PROFILE.profilePic} className="nav-avatar" alt="Kishore N profile" />
-          <span>Kishore N</span>
-        </a>
-        <ul className="nav-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#work">Experience</a></li>
-          <li><a href="#skills">Skills</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
-        >
-          {theme === "light" ? "🌙 Dark" : "☀️ Light"}
-        </button>
-      </nav>
+      <div className="portfolio-sidebar-shadow"></div>
+      <div className="portfolio-sidebar-shadow right"></div>
+      <div className="portfolio-layout">
 
-      <main>
-        {/* Home / Hero Section */}
-        <section className="hero fade-section" id="home" tabIndex="0" aria-label="Home & introduction">
-          <div className="hero-inner">
-            <img
-              src={PROFILE.profilePic}
-              alt="Kishore N smiling"
-              className="hero-avatar"
-              width={128}
-              height={128}
-              loading="eager"
+        {/* Main Left Column */}
+        <main style={{paddingRight: 28, paddingBottom: 24}}>
+          {/* Hero */}
+          <section className="hero fade-section" id="home" tabIndex="0" aria-label="Home intro">
+            <div className="hero-left">
+              <div className="hero-hi">Hello, I'm</div>
+              <div className="hero-title">{PROFILE.name}</div>
+              <div className="hero-title" style={{fontSize:"1.74rem", color:"var(--accent-yellow)",margin:"-11px 0 10px 0"}}>{PROFILE.title}</div>
+              <div className="hero-tagline">{PROFILE.tagline}</div>
+              <div className="hero-cta">
+                <a href="#projects" className="btn btn-primary">
+                  View Projects {ICONS.arrow}
+                </a>
+                <a href={PROFILE.resume} className="btn btn-outline" download>
+                  Download CV
+                </a>
+              </div>
+            </div>
+            <div className="hero-img-area" style={{flex:'1 0 auto',position:'relative'}}>
+              <img
+                src={PROFILE.profilePic}
+                alt="Kishore N profile"
+                className="hero-avatar"
+                width={155}
+                height={155}
+                loading="eager"
               />
-            <h1>{PROFILE.name}</h1>
-            <h2 className="hero-title">{PROFILE.title}</h2>
-            <p className="hero-tagline">{PROFILE.tagline}</p>
-            <div className="hero-cta">
-              <a href="#projects" className="btn btn-primary">
-                View Projects {ICONS.arrow}
-              </a>
-              <a href={PROFILE.resume} className="btn btn-outline" download>
-                Download Resume
-              </a>
+              {/* Example of decorative doodle in hero section per design */}
+              <svg className="hero-img-doodle" viewBox="0 0 80 80">
+                <ellipse cx="40" cy="40" rx="36" ry="18" fill="#FDBA34" fillOpacity="0.22"/>
+                <circle cx="28" cy="30" r="7" stroke="#FDBA34" strokeWidth="2" fill="none"/>
+                <rect x="49" y="53" width="13" height="6" rx="3" fill="#fff" fillOpacity="0.55"/>
+              </svg>
             </div>
-            <div className="hero-socials" aria-label="Social links">
-              <a href={PROFILE.linkedin} className="icon-btn" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
-                {ICONS.linkedin}
-              </a>
-              <a href={PROFILE.github} className="icon-btn" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
-                {ICONS.github}
-              </a>
-              <a href={`mailto:${PROFILE.email}`} className="icon-btn" aria-label="Email">
-                {ICONS.mail}
-              </a>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        {/* About */}
-        <section className="section fade-section" id="about" tabIndex="0" aria-label="About me">
-          <SectionTitle title="About" />
-          <div className="about-content">
-            <div className="about-bio">{ABOUT.bio}</div>
-            <div className="about-details">
-              <div>
-                <b>Location:</b> {PROFILE.location}
-              </div>
-              <div>
-                <b>Education:</b> {ABOUT.education.map((ed) =>
-                  <div key={ed.degree}>
-                    {ed.degree} at {ed.school}<br />
-                    <span className="education-year">{ed.year}</span>
-                  </div>)}
-              </div>
-              <div>
-                <b>Resume:</b> <a href={PROFILE.resume} rel="noopener noreferrer" target="_blank">View PDF {ICONS.external}</a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Experience */}
-        <section className="section fade-section" id="work" tabIndex="0" aria-label="Work experience">
-          <SectionTitle title="Experience" />
-          {EXPERIENCE.map((exp) =>
-            <ExperienceCard key={exp.company} {...exp} />
-          )}
-        </section>
-
-        {/* Skills */}
-        <section className="section fade-section" id="skills" tabIndex="0" aria-label="Skills grid">
-          <SectionTitle title="Skills" />
-          <div className="skills-grid">
-            {SKILLS.map((skill) =>
-              <div className="skill-item" key={skill.name}>
-                <span className="skill-icon" aria-hidden="true">{skill.icon}</span>
-                <span>{skill.name}</span>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Services */}
-        <section className="section fade-section" id="services" tabIndex="0" aria-label="Services offered">
-          <SectionTitle title="Services" />
-          <div className="services-grid">
-            {SERVICES.map((service, idx) =>
-              <div className="service-card" key={service.title} tabIndex="0" aria-label={`Service: ${service.title}`}>
-                <div className="service-icon" aria-hidden="true">{service.icon}</div>
-                <div className="service-title">{service.title}</div>
-                <div className="service-desc">{service.description}</div>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Projects */}
-        <section className="section fade-section" id="projects" tabIndex="0" aria-label="Portfolio and Projects">
-          <SectionTitle title="Projects" />
-          <div className="projects-grid">
-            {PROJECTS.map((proj, idx) =>
-              <div
-                className={`project-card ${openProject === idx ? "expanded" : ""}`}
-                key={proj.name}
-                tabIndex="0"
-                aria-label={`Project: ${proj.name}`}
-                aria-expanded={openProject === idx}
-              >
-                <div className="project-header" onClick={() => handleProjectToggle(idx)} onKeyDown={e => { if (e.key === "Enter") handleProjectToggle(idx); }} role="button" tabIndex={0} aria-pressed={openProject === idx}>
-                  <div className="project-title">{proj.name}</div>
-                  <div className="project-tech">{proj.tech.join(" / ")}</div>
-                  <span className="project-toggle" aria-hidden="true">{openProject === idx ? "▲" : "▼"}</span>
-                </div>
-                <div className="project-brief">{proj.brief}</div>
-                {openProject === idx && (
-                  <div className="project-details">
-                    <ul>
-                      {proj.details.map((d, i) => <li key={i}>{d}</li>)}
-                    </ul>
-                    <div className="project-links">
-                      <a href={proj.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">{ICONS.github} <span>GitHub</span></a>
-                      {proj.demo &&
-                        <a href={proj.demo} target="_blank" rel="noopener noreferrer" aria-label="Live Demo">{ICONS.external} <span>Demo</span></a>
-                      }
-                    </div>
+          {/* Projects */}
+          <section className="section fade-section" id="projects" tabIndex="0" aria-label="Portfolio and Projects">
+            <SectionTitle title="Projects" />
+            <div className="projects-grid">
+              {PROJECTS.map((proj, idx) =>
+                <div
+                  className={`project-card ${openProject === idx ? "expanded" : ""}`}
+                  key={proj.name}
+                  tabIndex="0"
+                  aria-label={`Project: ${proj.name}`}
+                  aria-expanded={openProject === idx}
+                  onClick={() => handleProjectToggle(idx)}
+                  onKeyDown={e => { if (e.key === "Enter") handleProjectToggle(idx); }}
+                  role="button"
+                >
+                  <div className="project-header">
+                    <div className="project-title">{proj.name}</div>
+                    <div className="project-tech">{proj.tech.join(" / ")}</div>
+                    <span className="project-toggle" aria-hidden="true">{openProject === idx ? "▲" : "▼"}</span>
                   </div>
-                )}
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Contact */}
-        <section className="section fade-section" id="contact" tabIndex="0" aria-label="Contact details and form">
-          <SectionTitle title="Contact" />
-          <div className="contact-flex">
-            <div className="contact-details">
-              <div>
-                <b>Email:</b> <a href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a>
-              </div>
-              <div>
-                <b>LinkedIn:</b>&nbsp;<a href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer">kishore-n-in</a>
-              </div>
-              <div>
-                <b>GitHub:</b>&nbsp;<a href={PROFILE.github} target="_blank" rel="noopener noreferrer">kishore-n</a>
-              </div>
-              <div>
-                <b>Location:</b> {PROFILE.location}
-              </div>
+                  <div className="project-brief">{proj.brief}</div>
+                  {openProject === idx && (
+                    <div className="project-details">
+                      <ul>
+                        {proj.details.map((d, i) => <li key={i}>{d}</li>)}
+                      </ul>
+                      <div className="project-links">
+                        <a href={proj.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">{ICONS.github} <span>GitHub</span></a>
+                        {proj.demo &&
+                          <a href={proj.demo} target="_blank" rel="noopener noreferrer" aria-label="Live Demo">{ICONS.external} <span>Demo</span></a>
+                        }
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
+          </section>
+
+          {/* Contact */}
+          <section className="section fade-section" id="contact" tabIndex="0" aria-label="Contact details and form">
+            <SectionTitle title="Contact" />
             <form className="contact-form" onSubmit={handleContactSubmit} aria-label="Contact form">
               <label htmlFor="name">Name</label>
               <input required type="text" id="name" name="name" autoComplete="name" />
               <label htmlFor="email">Email</label>
               <input required type="email" id="email" name="email" autoComplete="email" />
               <label htmlFor="msg">Message</label>
-              <textarea required id="msg" name="msg" rows="4" style={{resize:"vertical"}}></textarea>
+              <textarea required id="msg" name="msg" rows="4"></textarea>
               <button type="submit" className="btn btn-primary">Send</button>
             </form>
-          </div>
-        </section>
-      </main>
+          </section>
+        </main>
 
-      <footer className="footer" aria-label="Website footer">
+        {/* Sidebar Right */}
+        <aside style={{paddingLeft:18,maxWidth:480,minWidth:0}}>
+          {/* About Mini Card */}
+          <div className="about-side fade-section" id="about" tabIndex="0" aria-label="About summary">
+            <img
+              src={PROFILE.profilePic}
+              alt="Kishore N"
+              className="about-mini-avatar"
+              width={72}
+              height={72}
+              loading="lazy"
+            />
+            <div className="about-bio-side">{ABOUT.bio}</div>
+            <div className="about-links">
+              <a href={PROFILE.linkedin} className="social-btn" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                {ICONS.linkedin}
+              </a>
+              <a href={PROFILE.github} className="social-btn" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                {ICONS.github}
+              </a>
+              <a href={`mailto:${PROFILE.email}`} className="social-btn" aria-label="Email">
+                {ICONS.mail}
+              </a>
+            </div>
+            <div className="download-link">
+              <a href={PROFILE.resume} rel="noopener noreferrer" target="_blank">Download Resume {ICONS.external}</a>
+            </div>
+          </div>
+
+          {/* Stat Widgets */}
+          <div className="stats-side fade-section" tabIndex="0" aria-label="At-a-glance stats">
+            {STATS.map(st =>
+              <div className="stat-widget" key={st.label}>
+                <span className="stat-count" style={{color:st.color}}>{st.value}</span>
+                <span className="stat-label">{st.label}</span>
+              </div>
+            )}
+          </div>
+
+          {/* "Services" grid (sidebar version) */}
+          <div className="services-side fade-section" tabIndex="0" aria-label="Services highlights">
+            {SERVICES.map((service, idx) =>
+              <div className="service-item-side" key={service.title} tabIndex="0" aria-label={`Service: ${service.title}`}>
+                <div style={{fontSize:'2.0em',marginBottom:'4px'}} aria-hidden="true">{service.icon}</div>
+                <span>{service.title}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Education and detailed info */}
+          <div className="card fade-section" style={{fontSize:'.99em',marginBottom:'24px'}} tabIndex="0" aria-label="Education">
+            <b>Education:</b>
+            {ABOUT.education.map((ed) =>
+              <div key={ed.degree} style={{marginTop:"3px",marginBottom:"6px"}}>
+                {ed.degree} at {ed.school}
+                <br />
+                <span style={{color:"var(--primary-blue)"}}>{ed.year}</span>
+              </div>
+            )}
+            <div style={{marginTop:'11px'}}><b>Location:</b> {PROFILE.location}</div>
+          </div>
+        </aside>
+      </div>
+
+      <footer className="footer fade-section" aria-label="Website footer">
         Made by Kishore N &middot; {new Date().getFullYear()}
         <span className="footer-socials">
           <a href={PROFILE.linkedin} rel="noopener noreferrer" aria-label="LinkedIn" target="_blank">{ICONS.linkedin}</a>
@@ -397,26 +382,7 @@ function SectionTitle({ title }) {
 }
 
 // PUBLIC_INTERFACE
-function ExperienceCard({ company, title, period, location, description }) {
-  return (
-    <div className="exp-card" tabIndex="0" aria-label={`Experience at ${company}`}>
-      <div className="exp-header">
-        <span className="exp-title">{title}</span>
-        <span className="exp-company">@ {company}</span>
-        <span className="exp-period">{period}</span>
-      </div>
-      <div className="exp-location">{location}</div>
-      <ul className="exp-desc">
-        {description.map((d, i) => <li key={i}>{d}</li>)}
-      </ul>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
 function SEOHead() {
-  // NOTE: This must be imported at the top level in most SPA frameworks, but
-  // here used at component level for simplicity in this small codebase
   useEffect(() => {
     document.title = "Kishore N | Data Engineer Portfolio";
     const meta1 = document.createElement("meta");
@@ -439,7 +405,6 @@ function SEOHead() {
     meta4.content = "Portfolio website of Kishore N, showcasing data engineering, ML, cloud, and more.";
     document.head.appendChild(meta4);
 
-    // Remove appended meta tags on cleanup (for hot reload)
     return () => {
       [meta1, meta2, meta3, meta4].forEach((tag) => document.head.removeChild(tag));
     };
