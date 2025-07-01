@@ -956,7 +956,128 @@ img { max-width: 100%; border-radius: 12px; }
 }
 .footer-socials a { color: var(--accent-alt); margin: 0 4px;}
 
-/* Fade-in Animation for Scroll */
+/* === ANIMATION & INTERACTIVE HOVERS === */
+
+/* Fade/slide animation for scroll-in sections and cards */
+.fade-section, .anim-card {
+  opacity: 0;
+  transform: translateY(54px) scale(0.96);
+  transition:
+    opacity 0.88s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.08s cubic-bezier(0,0,0.23,1);
+  will-change: opacity, transform;
+}
+.fade-section.visible,
+.anim-card.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Slide left/right variants (hook can set direction via class but default is slide-up) */
+.fade-section.slide-left, .anim-card.slide-left {
+  transform: translateX(-38px) scale(0.96);
+}
+.fade-section.slide-right, .anim-card.slide-right {
+  transform: translateX(38px) scale(0.96);
+}
+
+/* Button animation – scale, color and underline on hover/focus */
+.anim-btn {
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.16s, background 0.21s, color 0.21s, transform 0.17s;
+  z-index: 1;
+}
+.anim-btn:hover, .anim-btn:focus {
+  transform: scale(1.045);
+  box-shadow: 0 2px 24px rgba(38,38,60,0.13);
+  color: #18181b !important;
+}
+.anim-btn.btn-outline:hover, .anim-btn.btn-outline:focus {
+  background: var(--primary-yellow);
+  color: var(--primary-text) !important;
+}
+.anim-btn::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 17%;
+  bottom: 2px;
+  width: 66%;
+  height: 2px;
+  background: linear-gradient(90deg, #FFD800 0%, #e2b800 100%);
+  opacity: 0;
+  transform: scaleX(0.4);
+  transition: opacity 0.22s, transform 0.22s;
+  pointer-events: none;
+}
+.anim-btn:hover::after, .anim-btn:focus::after {
+  opacity: 0.81;
+  transform: scaleX(1);
+}
+
+/* Animated card hover effect */
+.anim-card {
+  transition:
+    box-shadow 0.15s cubic-bezier(.14,.97,.34,1.01),
+    border-color 0.18s,
+    background 0.18s,
+    color 0.16s,
+    transform 0.14s cubic-bezier(.14,.97,.34,1.01);
+}
+.anim-card:hover, .anim-card:focus {
+  background: #fffbeb;
+  color: #222;
+  border-color: var(--primary-yellow, #FFD800);
+  transform: scale(1.018) translateY(-5px);
+  box-shadow: 0 8px 28px 0 rgba(38,38,60,0.13);
+  transition-delay: 0s;
+}
+.anim-card:active {
+  transform: scale(0.98) translateY(1px);
+}
+
+/* For project/service/skill/side stat cards make sure interaction looks great in both light/dark */
+.skill-item.anim-card:hover {
+  background: var(--accent);
+  color: #fff;
+}
+.service-card.anim-card:hover, .service-card.anim-card:focus {
+  background: var(--primary-yellow);
+  color: #1a1a1a;
+}
+
+.stat-widget.anim-card:hover, .stat-widget.anim-card:focus,
+.service-item-side.anim-card:hover, .service-item-side.anim-card:focus {
+  background: #fffbe2;
+  color: #222;
+  box-shadow: 0 8px 20px 0 rgba(38,38,60,0.10);
+  border-color: #ffe63c;
+}
+/* Animate link underline for project links in project-cards */
+.project-links a {
+  position: relative;
+  transition: color 0.18s;
+}
+.project-links a::after {
+  content: "";
+  position: absolute;
+  left: 7%;
+  bottom: -2px;
+  width: 86%;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--accent-alt, #FDBA34);
+  transform: scaleX(0.11);
+  opacity: 0;
+  transition: opacity 0.18s, transform 0.19s;
+  pointer-events: none;
+}
+.project-links a:hover::after, .project-links a:focus::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+/* Retain old fade for backward compatibility */
 .fade-section {
   opacity: 0;
   transform: translateY(54px);

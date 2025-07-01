@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 // SVG icons (inline for palette control)
@@ -163,10 +163,39 @@ const PROJECTS = [
 ];
 
 /**
- * PUBLIC_INTERFACE
- * App - Root portfolio component for Kishore N
- * Adds top-right fixed navigation bar with smooth scrolling to sections.
+ * Custom hook to handle intersection-based section animation.
+ * Adds "visible" class when node enters the viewport.
+ * Optionally accepts a slideDirection ('up' | 'left' | 'right').
  */
+function useInViewSection(slideDirection = "up") {
+  const ref = useRef(null);
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    // Remove any stale direction classes
+    node.classList.remove("slide-left", "slide-right", "slide-up");
+    // Assign directional class if not default (for future extensibility)
+    if (slideDirection && slideDirection !== "up") {
+      node.classList.add(slideDirection === "left" ? "slide-left" : "slide-right");
+    }
+    const handler = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          node.classList.add("visible");
+        }
+      });
+    };
+    const observer = new window.IntersectionObserver(handler, {
+      threshold: 0.16,
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+    // eslint-disable-next-line
+  }, []);
+  return ref;
+}
+
+// PUBLIC_INTERFACE
 function App() {
   const [theme, setTheme] = useState("light");
   useEffect(() => {
@@ -179,23 +208,6 @@ function App() {
   }, [theme]);
 
   const [openProject, setOpenProject] = useState(null);
-
-  // Fade-in animation for sections
-  useEffect(() => {
-    const handler = () => {
-      document
-        .querySelectorAll(".fade-section")
-        .forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight - 100) {
-            el.classList.add("visible");
-          }
-        });
-    };
-    window.addEventListener("scroll", handler);
-    handler();
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
 
   // PUBLIC_INTERFACE
   const handleProjectToggle = (idx) => setOpenProject(idx === openProject ? null : idx);
@@ -217,6 +229,17 @@ function App() {
     // Optionally, also update URL hash
     window.history.replaceState(null, "", `#${sectionId}`);
   };
+
+  // Refs for each main scroll-animated section/card
+  const heroRef = useInViewSection("up");
+  const aboutRef = useInViewSection("right");
+  const eduRef = useInViewSection("left");
+  const skillsRef = useInViewSection("up");
+  const servicesRef = useInViewSection("up");
+  const projectsRef = useInViewSection("up");
+  const contactRef = useInViewSection("up");
+  const statsRef = useInViewSection("up");
+  const servicesSideRef = useInViewSection("left");
 
   return (
     <>
@@ -254,7 +277,13 @@ function App() {
         {/* Main Left Column */}
         <main style={{paddingRight: 0, paddingBottom: 18}}>
           {/* Hero Cover */}
-          <section className="hero fade-section" id="home" tabIndex="0" aria-label="Home intro">
+          <section
+            className="hero fade-section"
+            id="home"
+            tabIndex="0"
+            aria-label="Home intro"
+            ref={heroRef}
+          >
             <div className="hero-accent-bar" aria-hidden="true"></div>
             <div className="hero-inner">
               <div className="hero-name">{PROFILE.name}</div>
@@ -264,12 +293,12 @@ function App() {
               <div className="hero-cta">
                 <a
                   href="#projects"
-                  className="btn btn-primary"
+                  className="btn btn-primary anim-btn"
                   onClick={e => handleNavScroll(e, "projects")}
                 >
                   View Projects {ICONS.arrow}
                 </a>
-                <a href={PROFILE.resume} className="btn btn-outline" download>
+                <a href={PROFILE.resume} className="btn btn-outline anim-btn" download>
                   Download CV
                 </a>
               </div>
@@ -289,7 +318,12 @@ function App() {
 
           {/* About Section (repositioned from the sidebar) */}
           <section>
-            <div className="about-side fade-section" id="about" tabIndex="0" aria-label="About summary">
+            <div className="about-side fade-section"
+                 id="about"
+                 tabIndex="0"
+                 aria-label="About summary"
+                 ref={aboutRef}
+            >
               {/* Yellow block as left motif for about */}
               <div style={{
                 width: "39px", height: "13px",
@@ -321,7 +355,13 @@ function App() {
               </div>
             </div>
             {/* Education and detailed info */}
-            <div className="card fade-section" style={{fontSize:'.99em',marginBottom:'24px'}} tabIndex="0" aria-label="Education">
+            <div
+              className="card fade-section"
+              style={{fontSize:'.99em',marginBottom:'24px'}}
+              tabIndex="0"
+              aria-label="Education"
+              ref={eduRef}
+            >
               {/* Small black dot motif */}
               <span style={{display:"inline-block",width:"8px",height:"8px",background:"var(--accent-dot)",borderRadius:"50%",marginRight:"9px",verticalAlign:"middle"}} aria-hidden="true"></span>
               <b>Education:</b>
@@ -337,11 +377,17 @@ function App() {
           </section>
 
           {/* Skills Section */}
-          <section className="section fade-section" id="skills" tabIndex="0" aria-label="Skills">
+          <section
+            className="section fade-section"
+            id="skills"
+            tabIndex="0"
+            aria-label="Skills"
+            ref={skillsRef}
+          >
             <SectionTitle title="Skills" />
             <div className="skills-grid">
               {SKILLS.map((skill, idx) => (
-                <div className="skill-item" key={skill.name}>
+                <div className="skill-item anim-card" key={skill.name}>
                   <span className="skill-icon" aria-hidden="true">{skill.icon}</span>
                   <div>{skill.name}</div>
                 </div>
@@ -350,11 +396,17 @@ function App() {
           </section>
 
           {/* Services Section */}
-          <section className="section fade-section" id="services" tabIndex="0" aria-label="Services">
+          <section
+            className="section fade-section"
+            id="services"
+            tabIndex="0"
+            aria-label="Services"
+            ref={servicesRef}
+          >
             <SectionTitle title="Services" />
             <div className="services-grid">
               {SERVICES.map((service, idx) => (
-                <div className="service-card" key={service.title} tabIndex="0" aria-label={`Service: ${service.title}`}>
+                <div className="service-card anim-card" key={service.title} tabIndex="0" aria-label={`Service: ${service.title}`}>
                   <span className="service-icon" aria-hidden="true">{service.icon}</span>
                   <span className="service-title">{service.title}</span>
                   <span className="service-desc">{service.description}</span>
@@ -364,12 +416,18 @@ function App() {
           </section>
 
           {/* Projects */}
-          <section className="section fade-section" id="projects" tabIndex="0" aria-label="Portfolio and Projects">
+          <section
+            className="section fade-section"
+            id="projects"
+            tabIndex="0"
+            aria-label="Portfolio and Projects"
+            ref={projectsRef}
+          >
             <SectionTitle title="Projects" />
             <div className="projects-grid">
               {PROJECTS.map((proj, idx) => (
                 <div
-                  className={`project-card ${openProject === idx ? "expanded" : ""}`}
+                  className={`project-card anim-card ${openProject === idx ? "expanded" : ""}`}
                   key={proj.name}
                   tabIndex="0"
                   aria-label={`Project: ${proj.name}`}
@@ -427,7 +485,13 @@ function App() {
           </section>
 
           {/* Contact */}
-          <section className="section fade-section" id="contact" tabIndex="0" aria-label="Contact details and form">
+          <section
+            className="section fade-section"
+            id="contact"
+            tabIndex="0"
+            aria-label="Contact details and form"
+            ref={contactRef}
+          >
             <SectionTitle title="Contact" />
             <form className="contact-form" onSubmit={handleContactSubmit} aria-label="Contact form">
               <label htmlFor="name">Name</label>
@@ -436,7 +500,7 @@ function App() {
               <input required type="email" id="email" name="email" autoComplete="email" />
               <label htmlFor="msg">Message</label>
               <textarea required id="msg" name="msg" rows="4"></textarea>
-              <button type="submit" className="btn btn-primary">Send</button>
+              <button type="submit" className="btn btn-primary anim-btn">Send</button>
             </form>
           </section>
         </main>
@@ -444,11 +508,16 @@ function App() {
         {/* Sidebar Right */}
         <aside style={{paddingLeft:18,maxWidth:480,minWidth:0}}>
           {/* Stat Widgets */}
-          <div className="stats-side fade-section" tabIndex="0" aria-label="At-a-glance stats">
+          <div
+            className="stats-side fade-section"
+            tabIndex="0"
+            aria-label="At-a-glance stats"
+            ref={statsRef}
+          >
             {/* Decorative dot motif */}
             <div style={{position:"absolute",top:13, right:27, width:"9px",height:"9px",background:"var(--accent-dot)",borderRadius:"50%"}} aria-hidden="true"></div>
             {STATS.map(st =>
-              <div className="stat-widget" key={st.label}>
+              <div className="stat-widget anim-card" key={st.label}>
                 <span className="stat-count">{st.value}</span>
                 <span className="stat-label">{st.label}</span>
               </div>
@@ -456,9 +525,15 @@ function App() {
           </div>
 
           {/* "Services" grid (sidebar version) */}
-          <div className="services-side fade-section" id="services-side" tabIndex="0" aria-label="Services highlights">
+          <div
+            className="services-side fade-section"
+            id="services-side"
+            tabIndex="0"
+            aria-label="Services highlights"
+            ref={servicesSideRef}
+          >
             {SERVICES.map((service, idx) =>
-              <div className="service-item-side" key={service.title} tabIndex="0" aria-label={`Service: ${service.title}`}>
+              <div className="service-item-side anim-card" key={service.title} tabIndex="0" aria-label={`Service: ${service.title}`}>
                 {/* Yellow bar accent left of icon */}
                 <span style={{display:"block",width:"22px",height:"7px",background:"var(--primary-yellow)",marginBottom:"5px"}} aria-hidden="true"></span>
                 <div style={{fontSize:'1.9em',marginBottom:'6px',color:"var(--accent-dot)"}} aria-hidden="true">{service.icon}</div>
