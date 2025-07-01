@@ -162,15 +162,18 @@ const PROJECTS = [
   },
 ];
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * App - Root portfolio component for Kishore N
+ * Adds top-right fixed navigation bar with smooth scrolling to sections.
+ */
 function App() {
-  const [theme, setTheme] = useState("light"); // not visible in Dribbble but keep toggle for spec
+  const [theme, setTheme] = useState("light");
   useEffect(() => {
     const saved = window.localStorage.getItem("theme");
     setTheme(saved ? saved : "light");
   }, []);
   useEffect(() => {
-    // Just sets data-theme (support for future extensibility)
     document.documentElement.setAttribute("data-theme", theme);
     window.localStorage.setItem("theme", theme);
   }, [theme]);
@@ -196,7 +199,6 @@ function App() {
 
   // PUBLIC_INTERFACE
   const handleProjectToggle = (idx) => setOpenProject(idx === openProject ? null : idx);
-
   // PUBLIC_INTERFACE
   const handleContactSubmit = (e) => {
     e.preventDefault();
@@ -204,9 +206,45 @@ function App() {
     e.target.reset();
   };
 
+  // PUBLIC_INTERFACE
+  // Scroll to section by id with smooth effect
+  const handleNavScroll = (e, sectionId) => {
+    e.preventDefault();
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: sectionId === "home" ? "start" : "center" });
+    }
+    // Optionally, also update URL hash
+    window.history.replaceState(null, "", `#${sectionId}`);
+  };
+
   return (
     <>
       <SEOHead />
+      {/* Fixed Top-right Navbar */}
+      <nav className="nav-fixed-bar" aria-label="Section navigation">
+        <ul className="nav-fixed-list">
+          <li>
+            <a href="#home" onClick={e => handleNavScroll(e, "home")}>Home</a>
+          </li>
+          <li>
+            <a href="#about" onClick={e => handleNavScroll(e, "about")}>About</a>
+          </li>
+          <li>
+            <a href="#skills" onClick={e => handleNavScroll(e, "skills")}>Skills</a>
+          </li>
+          <li>
+            <a href="#services" onClick={e => handleNavScroll(e, "services")}>Services</a>
+          </li>
+          <li>
+            <a href="#projects" onClick={e => handleNavScroll(e, "projects")}>Projects</a>
+          </li>
+          <li>
+            <a href="#contact" onClick={e => handleNavScroll(e, "contact")}>Contact</a>
+          </li>
+        </ul>
+      </nav>
+
       {/* --- Portfolio Abstract Background Motif Overlay --- */}
       <PortfolioBackgroundVisuals />
       <div className="portfolio-sidebar-shadow"></div>
@@ -224,7 +262,11 @@ function App() {
               <div className="hero-title-sub">{PROFILE.title}</div>
               <div className="hero-tagline">{PROFILE.tagline}</div>
               <div className="hero-cta">
-                <a href="#projects" className="btn btn-primary">
+                <a
+                  href="#projects"
+                  className="btn btn-primary"
+                  onClick={e => handleNavScroll(e, "projects")}
+                >
                   View Projects {ICONS.arrow}
                 </a>
                 <a href={PROFILE.resume} className="btn btn-outline" download>
@@ -242,6 +284,33 @@ function App() {
                   loading="eager"
                 />
               </div>
+            </div>
+          </section>
+
+          {/* Skills Section */}
+          <section className="section fade-section" id="skills" tabIndex="0" aria-label="Skills">
+            <SectionTitle title="Skills" />
+            <div className="skills-grid">
+              {SKILLS.map((skill, idx) => (
+                <div className="skill-item" key={skill.name}>
+                  <span className="skill-icon" aria-hidden="true">{skill.icon}</span>
+                  <div>{skill.name}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Services Section */}
+          <section className="section fade-section" id="services" tabIndex="0" aria-label="Services">
+            <SectionTitle title="Services" />
+            <div className="services-grid">
+              {SERVICES.map((service, idx) => (
+                <div className="service-card" key={service.title} tabIndex="0" aria-label={`Service: ${service.title}`}>
+                  <span className="service-icon" aria-hidden="true">{service.icon}</span>
+                  <span className="service-title">{service.title}</span>
+                  <span className="service-desc">{service.description}</span>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -371,7 +440,7 @@ function App() {
           </div>
 
           {/* "Services" grid (sidebar version) */}
-          <div className="services-side fade-section" tabIndex="0" aria-label="Services highlights">
+          <div className="services-side fade-section" id="services-side" tabIndex="0" aria-label="Services highlights">
             {SERVICES.map((service, idx) =>
               <div className="service-item-side" key={service.title} tabIndex="0" aria-label={`Service: ${service.title}`}>
                 {/* Yellow bar accent left of icon */}
