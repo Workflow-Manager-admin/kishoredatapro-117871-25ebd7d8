@@ -287,6 +287,55 @@ function App() {
             </div>
           </section>
 
+          {/* About Section (repositioned from the sidebar) */}
+          <section>
+            <div className="about-side fade-section" id="about" tabIndex="0" aria-label="About summary">
+              {/* Yellow block as left motif for about */}
+              <div style={{
+                width: "39px", height: "13px",
+                background: "var(--primary-yellow)",
+                marginBottom: "16px"
+              }} aria-hidden="true"></div>
+              <img
+                src={PROFILE.profilePic}
+                alt="Kishore N"
+                className="about-mini-avatar"
+                width={74}
+                height={74}
+                loading="lazy"
+              />
+              <div className="about-bio-side">{ABOUT.bio}</div>
+              <div className="about-links">
+                <a href={PROFILE.linkedin} className="social-btn" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                  {ICONS.linkedin}
+                </a>
+                <a href={PROFILE.github} className="social-btn" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                  {ICONS.github}
+                </a>
+                <a href={`mailto:${PROFILE.email}`} className="social-btn" aria-label="Email">
+                  {ICONS.mail}
+                </a>
+              </div>
+              <div className="download-link">
+                <a href={PROFILE.resume} rel="noopener noreferrer" target="_blank">Download Resume {ICONS.external}</a>
+              </div>
+            </div>
+            {/* Education and detailed info */}
+            <div className="card fade-section" style={{fontSize:'.99em',marginBottom:'24px'}} tabIndex="0" aria-label="Education">
+              {/* Small black dot motif */}
+              <span style={{display:"inline-block",width:"8px",height:"8px",background:"var(--accent-dot)",borderRadius:"50%",marginRight:"9px",verticalAlign:"middle"}} aria-hidden="true"></span>
+              <b>Education:</b>
+              {ABOUT.education.map((ed) =>
+                <div key={ed.degree} style={{marginTop:"3px",marginBottom:"6px"}}>
+                  {ed.degree} at {ed.school}
+                  <br />
+                  <span style={{color:"var(--primary-yellow)"}}>{ed.year}</span>
+                </div>
+              )}
+              <div style={{marginTop:'11px'}}><b>Location:</b> {PROFILE.location}</div>
+            </div>
+          </section>
+
           {/* Skills Section */}
           <section className="section fade-section" id="skills" tabIndex="0" aria-label="Skills">
             <SectionTitle title="Skills" />
@@ -394,39 +443,6 @@ function App() {
 
         {/* Sidebar Right */}
         <aside style={{paddingLeft:18,maxWidth:480,minWidth:0}}>
-          {/* About Mini Card */}
-          <div className="about-side fade-section" id="about" tabIndex="0" aria-label="About summary">
-            {/* Yellow block as left motif for about */}
-            <div style={{
-              width: "39px", height: "13px",
-              background: "var(--primary-yellow)",
-              marginBottom: "16px"
-            }} aria-hidden="true"></div>
-            <img
-              src={PROFILE.profilePic}
-              alt="Kishore N"
-              className="about-mini-avatar"
-              width={74}
-              height={74}
-              loading="lazy"
-            />
-            <div className="about-bio-side">{ABOUT.bio}</div>
-            <div className="about-links">
-              <a href={PROFILE.linkedin} className="social-btn" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
-                {ICONS.linkedin}
-              </a>
-              <a href={PROFILE.github} className="social-btn" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
-                {ICONS.github}
-              </a>
-              <a href={`mailto:${PROFILE.email}`} className="social-btn" aria-label="Email">
-                {ICONS.mail}
-              </a>
-            </div>
-            <div className="download-link">
-              <a href={PROFILE.resume} rel="noopener noreferrer" target="_blank">Download Resume {ICONS.external}</a>
-            </div>
-          </div>
-
           {/* Stat Widgets */}
           <div className="stats-side fade-section" tabIndex="0" aria-label="At-a-glance stats">
             {/* Decorative dot motif */}
@@ -449,21 +465,6 @@ function App() {
                 <span>{service.title}</span>
               </div>
             )}
-          </div>
-
-          {/* Education and detailed info */}
-          <div className="card fade-section" style={{fontSize:'.99em',marginBottom:'24px'}} tabIndex="0" aria-label="Education">
-            {/* Small black dot motif */}
-            <span style={{display:"inline-block",width:"8px",height:"8px",background:"var(--accent-dot)",borderRadius:"50%",marginRight:"9px",verticalAlign:"middle"}} aria-hidden="true"></span>
-            <b>Education:</b>
-            {ABOUT.education.map((ed) =>
-              <div key={ed.degree} style={{marginTop:"3px",marginBottom:"6px"}}>
-                {ed.degree} at {ed.school}
-                <br />
-                <span style={{color:"var(--primary-yellow)"}}>{ed.year}</span>
-              </div>
-            )}
-            <div style={{marginTop:'11px'}}><b>Location:</b> {PROFILE.location}</div>
           </div>
         </aside>
       </div>
