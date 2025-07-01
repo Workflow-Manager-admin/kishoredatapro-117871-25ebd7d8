@@ -212,13 +212,14 @@ function App() {
       <div className="portfolio-layout">
 
         {/* Main Left Column */}
-        <main style={{paddingRight: 28, paddingBottom: 24}}>
-          {/* Hero */}
+        <main style={{paddingRight: 0, paddingBottom: 18}}>
+          {/* Hero Cover */}
           <section className="hero fade-section" id="home" tabIndex="0" aria-label="Home intro">
-            <div className="hero-left">
-              <div className="hero-hi">Hello, I'm</div>
-              <div className="hero-title">{PROFILE.name}</div>
-              <div className="hero-title" style={{fontSize:"1.74rem", color:"var(--accent-yellow)",margin:"-11px 0 10px 0"}}>{PROFILE.title}</div>
+            <div className="hero-accent-bar" aria-hidden="true"></div>
+            <div className="hero-inner">
+              <div className="hero-name">{PROFILE.name}</div>
+              <div className="hero-title-main">Portfolio</div>
+              <div className="hero-title-sub">{PROFILE.title}</div>
               <div className="hero-tagline">{PROFILE.tagline}</div>
               <div className="hero-cta">
                 <a href="#projects" className="btn btn-primary">
@@ -228,22 +229,17 @@ function App() {
                   Download CV
                 </a>
               </div>
-            </div>
-            <div className="hero-img-area" style={{flex:'1 0 auto',position:'relative'}}>
-              <img
-                src={PROFILE.profilePic}
-                alt="Kishore N profile"
-                className="hero-avatar"
-                width={155}
-                height={155}
-                loading="eager"
-              />
-              {/* Example of decorative doodle in hero section per design */}
-              <svg className="hero-img-doodle" viewBox="0 0 80 80">
-                <ellipse cx="40" cy="40" rx="36" ry="18" fill="#FDBA34" fillOpacity="0.22"/>
-                <circle cx="28" cy="30" r="7" stroke="#FDBA34" strokeWidth="2" fill="none"/>
-                <rect x="49" y="53" width="13" height="6" rx="3" fill="#fff" fillOpacity="0.55"/>
-              </svg>
+              <div className="hero-img-area">
+                <div className="hero-img-yellow-bar" aria-hidden="true"></div>
+                <img
+                  src={PROFILE.profilePic}
+                  alt="Kishore N cover"
+                  className="hero-avatar"
+                  width={365}
+                  height={196}
+                  loading="eager"
+                />
+              </div>
             </div>
           </section>
 
@@ -251,7 +247,7 @@ function App() {
           <section className="section fade-section" id="projects" tabIndex="0" aria-label="Portfolio and Projects">
             <SectionTitle title="Projects" />
             <div className="projects-grid">
-              {PROJECTS.map((proj, idx) =>
+              {PROJECTS.map((proj, idx) => (
                 <div
                   className={`project-card ${openProject === idx ? "expanded" : ""}`}
                   key={proj.name}
@@ -263,6 +259,16 @@ function App() {
                   role="button"
                 >
                   <div className="project-header">
+                    {/* Dot motif for visual anchor */}
+                    <span style={{
+                      width: "15px",
+                      height: "15px",
+                      background: "var(--accent-dot)",
+                      borderRadius: "50%",
+                      display: "inline-block",
+                      marginRight: "0.5em",
+                      verticalAlign: "middle",
+                    }} aria-hidden="true"></span>
                     <div className="project-title">{proj.name}</div>
                     <div className="project-tech">{proj.tech.join(" / ")}</div>
                     <span className="project-toggle" aria-hidden="true">{openProject === idx ? "▲" : "▼"}</span>
@@ -271,7 +277,21 @@ function App() {
                   {openProject === idx && (
                     <div className="project-details">
                       <ul>
-                        {proj.details.map((d, i) => <li key={i}>{d}</li>)}
+                        {proj.details.map((d, i) =>
+                          <li key={i} style={{position: "relative"}}>
+                            <span style={{
+                              display: "inline-block",
+                              width: "9px",
+                              height: "9px",
+                              background: "var(--accent-dot)",
+                              borderRadius: "50%",
+                              marginRight: "11px",
+                              verticalAlign: "middle",
+                              position: "relative", top: "-1px"
+                            }} aria-hidden="true"></span>
+                            {d}
+                          </li>
+                        )}
                       </ul>
                       <div className="project-links">
                         <a href={proj.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">{ICONS.github} <span>GitHub</span></a>
@@ -282,7 +302,7 @@ function App() {
                     </div>
                   )}
                 </div>
-              )}
+              ))}
             </div>
           </section>
 
@@ -305,12 +325,18 @@ function App() {
         <aside style={{paddingLeft:18,maxWidth:480,minWidth:0}}>
           {/* About Mini Card */}
           <div className="about-side fade-section" id="about" tabIndex="0" aria-label="About summary">
+            {/* Yellow block as left motif for about */}
+            <div style={{
+              width: "39px", height: "13px",
+              background: "var(--primary-yellow)",
+              marginBottom: "16px"
+            }} aria-hidden="true"></div>
             <img
               src={PROFILE.profilePic}
               alt="Kishore N"
               className="about-mini-avatar"
-              width={72}
-              height={72}
+              width={74}
+              height={74}
               loading="lazy"
             />
             <div className="about-bio-side">{ABOUT.bio}</div>
@@ -332,9 +358,11 @@ function App() {
 
           {/* Stat Widgets */}
           <div className="stats-side fade-section" tabIndex="0" aria-label="At-a-glance stats">
+            {/* Decorative dot motif */}
+            <div style={{position:"absolute",top:13, right:27, width:"9px",height:"9px",background:"var(--accent-dot)",borderRadius:"50%"}} aria-hidden="true"></div>
             {STATS.map(st =>
               <div className="stat-widget" key={st.label}>
-                <span className="stat-count" style={{color:st.color}}>{st.value}</span>
+                <span className="stat-count">{st.value}</span>
                 <span className="stat-label">{st.label}</span>
               </div>
             )}
@@ -344,7 +372,9 @@ function App() {
           <div className="services-side fade-section" tabIndex="0" aria-label="Services highlights">
             {SERVICES.map((service, idx) =>
               <div className="service-item-side" key={service.title} tabIndex="0" aria-label={`Service: ${service.title}`}>
-                <div style={{fontSize:'2.0em',marginBottom:'4px'}} aria-hidden="true">{service.icon}</div>
+                {/* Yellow bar accent left of icon */}
+                <span style={{display:"block",width:"22px",height:"7px",background:"var(--primary-yellow)",marginBottom:"5px"}} aria-hidden="true"></span>
+                <div style={{fontSize:'1.9em',marginBottom:'6px',color:"var(--accent-dot)"}} aria-hidden="true">{service.icon}</div>
                 <span>{service.title}</span>
               </div>
             )}
@@ -352,12 +382,14 @@ function App() {
 
           {/* Education and detailed info */}
           <div className="card fade-section" style={{fontSize:'.99em',marginBottom:'24px'}} tabIndex="0" aria-label="Education">
+            {/* Small black dot motif */}
+            <span style={{display:"inline-block",width:"8px",height:"8px",background:"var(--accent-dot)",borderRadius:"50%",marginRight:"9px",verticalAlign:"middle"}} aria-hidden="true"></span>
             <b>Education:</b>
             {ABOUT.education.map((ed) =>
               <div key={ed.degree} style={{marginTop:"3px",marginBottom:"6px"}}>
                 {ed.degree} at {ed.school}
                 <br />
-                <span style={{color:"var(--primary-blue)"}}>{ed.year}</span>
+                <span style={{color:"var(--primary-yellow)"}}>{ed.year}</span>
               </div>
             )}
             <div style={{marginTop:'11px'}}><b>Location:</b> {PROFILE.location}</div>
