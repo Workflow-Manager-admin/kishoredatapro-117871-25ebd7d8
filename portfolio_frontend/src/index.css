@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  font-family: 'Inter', 'Roboto', 'Open Sans', Arial, sans-serif;
+  font-size: 1.01em;
+  background: #fff;
+  color: #191d28;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
